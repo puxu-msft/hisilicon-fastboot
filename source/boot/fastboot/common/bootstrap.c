@@ -8,6 +8,9 @@
 #include <jtag_prg.h>
 #include <errno.h>
 #include <asm/io.h>
+#ifdef CONFIG_SYS_HUSH_PARSER
+#include <hush.h>	/* 开了 hush 时下面要 parse_string_outer 与 FLAG_*（SDK 漏了这个头，cm201-2） */
+#endif
 
 #define dump_buf(buf, len) do{\
 	int i;\

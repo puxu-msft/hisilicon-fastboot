@@ -540,6 +540,14 @@ Addr
 #define CFG_CMDLINE_HISTORYS    8
 #define CONFIG_CMDLINE_EDITING
 
+/*
+ * hush 解析器与 run 命令（cm201-2）：p2 env 的 bootcmd 是 `tftp … && bootm …; mmc read …;bootm …`，只有 hush 认 `&&`——tftp 失败时跳过紧跟的 bootm，再按 `;` 往下读 p6。SDK 缺省的简单解析器只按 `;` 分段，`&& bootm 0x1FFFFC0` 成了 tftp 的多余参数，这一段报用法错误，每次开机都跳过 TFTP。
+ * 命令集照现网 p1（histb 的 fastboot）：hush 带进 showvar、test、true、false、exit，另开 run。续行提示符 histb 写成了多字符常量（readline 收到的是 0x3e20 这个地址），这里按 U-Boot 的写法用字符串。
+ */
+#define CONFIG_SYS_HUSH_PARSER
+#define CONFIG_SYS_PROMPT_HUSH_PS2    "> "
+#define CONFIG_CMD_RUN
+
 #if 1 /* Enable Ctrl+C to stop autoboot.*/
 #  define CONFIG_AUTOBOOT_KEYED      1
 #  define CONFIG_AUTOBOOT_PROMPT     "Press Ctrl+C to stop autoboot\n"
