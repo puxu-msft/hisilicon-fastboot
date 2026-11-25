@@ -267,14 +267,11 @@ int load_fip(char *buf)
 			printf("Get - %s \n", files[index].entry->name);
 			image_header_t *hdr = (image_header_t *)(files[index].image_buffer);
 			if (image_check_arch ((image_header_t *)(files[index].image_buffer), IH_ARCH_ARM64)) {
-				char *fdt = (char *)image_get_image_end(hdr);
-				ret = fdt_check_header(fdt);
-				if (ret) {
-					printf("Invalid FDT at 0x%p, hdr at 0x%p\n", fdt, hdr);
-					goto error;
-				}
+				/*
+				 * cm201-2：照现网 p1（histb）不要求 uImage 数据之后紧跟 FDT、arg0 给 0。我们的 FIP（tools/boot-d/pack-fip-d.py）在 BL33 之后就是文件末尾，DTB 槽在 BL31 之后；BL31 按固定地址取 BL33 与 DTB 槽，不读这里的 bl31_params。
+				 */
 				bl33_ep->pc = (uint64_t)image_get_data(hdr);
-				bl33_ep->args.arg0 = (uint64_t)((uint32_t)fdt);
+				bl33_ep->args.arg0 = 0;
 				bl33_ep->args.arg1 = (uint64_t)(image_get_ep(hdr));
 				bl33_ep->args.arg2 = (uint64_t)(files[index].size - sizeof(image_header_t));
 				bl33_ep->args.arg3 = CFG_BOOT_PARAMS;
