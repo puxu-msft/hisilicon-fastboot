@@ -527,7 +527,8 @@ Addr
 #define CONFIG_VERSION_VARIABLE      1 /*used in common/main.c*/
 #define CONFIG_SYS_LONGHELP
 #define CONFIG_SYS_PROMPT            "fastboot# " /* Monitor Command Prompt */
-#define CONFIG_SYS_CBSIZE            1024  /* Console I/O Buffer Size */
+/* cm201-2：照现网 p1（histb）用 2048——它的 printf 栈缓冲是 0x820 字节（CONFIG_SYS_PBSIZE），hush 续行时按 0x800 判长度；SDK 是 1024。printf 用不限长的 vsprintf 写这块缓冲，env 里长的值（bootargs）照现网留足余量 */
+#define CONFIG_SYS_CBSIZE            2048  /* Console I/O Buffer Size */
 #define CONFIG_SYS_PBSIZE            \
 	(CONFIG_SYS_CBSIZE+sizeof(CONFIG_SYS_PROMPT)+16)
 
