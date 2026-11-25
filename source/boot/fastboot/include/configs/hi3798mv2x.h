@@ -498,7 +498,8 @@ Addr
 #  define CONFIG_CMD_UNZIP
 #endif
 
-#define CONFIG_HIBERNATE
+/* cm201-2：照现网 p1（histb）不编休眠快启——它的命令表没有 hibernate、clear_bootf，main_loop 不调 hibernate_boot，reserve_mem_init 不预留 hibdrv/userapi 两块（4 MiB + 3 MiB，会把其后 product 申请的保留内存、开机 logo 的帧缓冲往下推） */
+#undef CONFIG_HIBERNATE
 #ifdef CONFIG_HIBERNATE
 #define CONFIG_HIBERNATE_HIBDRV_SIZE     0x300000
 #define CONFIG_HIBERNATE_USERAPI_SIZE    0x200000
